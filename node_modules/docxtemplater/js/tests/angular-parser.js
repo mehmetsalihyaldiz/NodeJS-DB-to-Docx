@@ -1,0 +1,43 @@
+"use strict";
+
+var expressions = require("angular-expressions");
+
+var assign = require("lodash/assign.js");
+
+var last = require("lodash/last.js");
+
+function angularParser(tag) {
+  tag = tag.replace(/^\.$/, "this").replace(/(’|‘)/g, "'").replace(/(“|”)/g, '"');
+  var expr = expressions.compile(tag); // isAngularAssignment will be true if your tag contains a `=`, for example
+  // when you write the following in your template :
+  // {full_name = first_name + last_name}
+  // In that case, it makes sense to return an empty string so
+  // that the tag does not write something to the generated document.
+
+  var isAngularAssignment = expr.ast.body[0] && expr.ast.body[0].expression.type === "AssignmentExpression";
+  return {
+    get: function get(scope, context) {
+      var obj = {};
+      var scopeList = context.scopeList;
+      var index = last(context.scopePathItem);
+      var num = context.num;
+
+      for (var i = 0, len = num + 1; i < len; i++) {
+        obj = assign(obj, scopeList[i]);
+      }
+
+      obj = assign(obj, {
+        $index: index
+      });
+      var result = expr(scope, obj);
+
+      if (isAngularAssignment) {
+        return "";
+      }
+
+      return result;
+    }
+  };
+}
+
+module.exports = angularParser;

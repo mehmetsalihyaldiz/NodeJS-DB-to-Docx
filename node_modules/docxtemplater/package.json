@@ -1,0 +1,113 @@
+{
+  "name": "docxtemplater",
+  "version": "3.29.4",
+  "author": "Edgar Hipp",
+  "description": "docx and pptx generator working with templates and data (like Mustache, for Word and Powerpoint documents)",
+  "contributors": [
+    {
+      "name": "Edgar Hipp"
+    }
+  ],
+  "main": "js/docxtemplater.js",
+  "keywords": [
+    "docx",
+    "pptx",
+    "templates",
+    "generation",
+    "microsoft word",
+    "microsoft powerpoint",
+    "report"
+  ],
+  "types": "./js/docxtemplater.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/open-xml-templating/docxtemplater"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "^0.8.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.10",
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.17.3",
+    "@babel/preset-env": "^7.17.10",
+    "@stryker-mutator/core": "^6.0.1",
+    "@stryker-mutator/mocha-runner": "^6.0.1",
+    "@wdio/cli": "^7.19.7",
+    "angular-expressions": "^1.1.5",
+    "babel-loader": "^8.2.5",
+    "chai": "^4.3.6",
+    "chalk": "^5.0.1",
+    "diff": "^5.0.0",
+    "envify": "^4.1.0",
+    "es6-promise": "^4.2.8",
+    "eslint": "^8.14.0",
+    "eslint_d": "^12.1.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-sort-class-members": "^1.14.1",
+    "eslint-plugin-specific-sort": "file:.eslint-rules",
+    "finalhandler": "^1.2.0",
+    "lodash": "^4.17.21",
+    "mkdirp": "^1.0.4",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
+    "pizzip": "^3.1.1",
+    "prettier": "^2.6.2",
+    "request": "^2.88.2",
+    "rimraf": "^3.0.2",
+    "selenium-standalone": "^8.1.1",
+    "serve-static": "^1.15.0",
+    "stryker-cli": "^1.0.2",
+    "tsd": "^0.20.0",
+    "webdriverio": "^7.19.7",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "scripts": {
+    "generate:doc": "cd docs; rm build/ -rf ; make html",
+    "profile": "./profile.bash",
+    "preversion": "npm run test:es6 && npm run lint && FAST= npm test && rimraf build && mkdirp build && npm run browserify && npm run test:typings && npm run verifypublishsize && npm run test:browser",
+    "check-casing": "./check-casing.bash",
+    "compile": "npm run convertto:es5",
+    "browserify:test": "FILE=test webpack",
+    "browserify:lib": "webpack",
+    "browserify:min": "MIN=true webpack",
+    "updtr": "updtr",
+    "browserify": "npm run browserify:test && npm run browserify:lib && npm run browserify:min",
+    "convertto:es5": "rimraf js -rf && mkdirp js && npm run babel && cp es6/*.ts js",
+    "convertto:es5:watch": "npm run babel -- --watch",
+    "test:coverage": "nyc --reporter=html --reporter=text mocha --  es6/tests/index.js",
+    "prettier": "prettier --list-different 'es6/**/!(filenames).js' '*.js' '*.mjs' 'es6/*.ts' '.eslint-rules/*.js' README.md CHANGELOG.md",
+    "prettier:fix": "prettier --write 'es6/**/!(filenames).js' '*.js' '*.mjs' 'es6/*.ts' '.eslint-rules/*.js' README.md CHANGELOG.md",
+    "lint": "eslint_d . && ./check-casing.bash && npm run prettier",
+    "lint:fix": "eslint_d . && ./check-casing.bash && npm run prettier:fix",
+    "test:chrome": "BROWSER=CHROME ./webdriver.bash",
+    "test:firefox": "BROWSER=FIREFOX ./webdriver.bash",
+    "test:browser": "./webdriver.bash",
+    "babel": "babel es6 --out-dir js",
+    "mocha": "mocha --full-trace --check-leaks js/tests/index.js",
+    "test:es6": "mocha --full-trace --check-leaks es6/tests/index.js",
+    "test:es6:update-fixtures": "UPDATE=true mocha --full-trace --check-leaks es6/tests/index.js",
+    "test:es6:fast": "FAST=true mocha --full-trace --check-leaks es6/tests/index.js",
+    "test:watch": "FAST=true mocha --watch --full-trace --check-leaks es6/tests/index.js",
+    "test:es6:slow": "FAST= mocha --full-trace --check-leaks es6/tests/index.js",
+    "test": "npm run convertto:es5 && npm run mocha",
+    "test:es5": "npm test",
+    "test:typings": "cp es6/*.ts js && tsd .",
+    "test:mutations": "SPEED_TEST=no stryker run",
+    "memorytest": "node --max-old-space-size=8000 es6/memory-test.js",
+    "verifypublishsize": "./verifypublishsize.bash"
+  },
+  "tsd": {
+    "compilerOptions": {
+      "lib": [
+        "DOM"
+      ]
+    }
+  }
+}

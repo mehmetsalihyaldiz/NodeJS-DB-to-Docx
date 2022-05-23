@@ -1,0 +1,13 @@
+{
+  "name": "NodeJS-DB-to-Docx",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mehmetsalihyaldiz/NodeJS-DB-to-Docx.git",
+  "author": "Mehmet Salih YALDIZ <83459326+mehmetsalihyaldiz@users.noreply.github.com>",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "docxtemplater": "^3.29.4",
+    "pizzip": "^3.1.1"
+  }
+}
